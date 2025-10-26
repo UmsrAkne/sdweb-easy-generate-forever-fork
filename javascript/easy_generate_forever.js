@@ -91,6 +91,16 @@ onUiLoaded(() => {
       const indicator = gradioApp().querySelector(`#${tab}_generate_box`)
         ?.nextElementSibling?.querySelector('.indicator');
 
+      // check seed value
+      const seedInput = gradioApp().getElementById(`${tab}_seed`)?.querySelector('input');
+      const seedValue = seedInput?.value?.trim();
+
+      // enable only when seed is -1
+      if (seedValue !== '-1') {
+        console.warn('[Generate Forever] Disabled: fixed seed detected');
+        return;
+      }
+
       if (!isForeverActive) {
         // ON: Start
         generateOnRepeat(genBtn, interruptBtn);
