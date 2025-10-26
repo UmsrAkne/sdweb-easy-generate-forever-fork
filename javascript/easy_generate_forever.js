@@ -73,4 +73,37 @@ onUiLoaded(() => {
 
     gradioApp().getElementById(`${tab}_generate_box`).after(container)
   })
+
+  // === Keyboard Shortcut ===
+  let isForeverActive = false; // Status flag 
+
+  document.addEventListener('keydown', (e) => {
+
+    // Toggle with Ctrl + Shift + G
+    if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key.toLowerCase() === 'g') {
+      e.preventDefault();
+
+      // target tab
+      const tab = 'txt2img'; // or img2img
+
+      const genBtn = `#${tab}_generate`;
+      const interruptBtn = `#${tab}_interrupt`;
+      const indicator = gradioApp().querySelector(`#${tab}_generate_box`)
+        ?.nextElementSibling?.querySelector('.indicator');
+
+      if (!isForeverActive) {
+        // ON: Start
+        generateOnRepeat(genBtn, interruptBtn);
+        indicator?.classList.add('forever');
+        console.log('[Generate Forever] ON');
+      } else {
+        // OFF: Stop
+        cancelGenerateForever();
+        indicator?.classList.remove('forever');
+        console.log('[Generate Forever] OFF');
+      }
+
+      isForeverActive = !isForeverActive;
+    }
+  });
 })
